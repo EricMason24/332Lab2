@@ -15,7 +15,7 @@ public:
 	static void stopGame();
 	void addPlayer(const string &);
 	shared_ptr<Player> findPlayer(const string &);
-	//virtual ~Game(); no destructor needed because we are using shared_ptr
+	virtual ~Game();
 	virtual int before_Turn(Player &) = 0;
 	virtual int turn(Player &) = 0;
 	virtual int after_Turn(Player &) = 0;
