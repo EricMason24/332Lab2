@@ -1,0 +1,5 @@
+﻿  Game.cpp
+\\warehouse2.seasad.wustl.edu\home\m.mason\my documents\visual studio 2015\projects\lab2\lab2\game.cpp(52): warning C4018: '<': signed/unsigned mismatch
+\\warehouse2.seasad.wustl.edu\home\m.mason\my documents\visual studio 2015\projects\lab2\lab2\game.cpp(64): warning C4018: '<': signed/unsigned mismatch
+  Lab2.vcxproj -> \\warehouse2.seasad.wustl.edu\home\m.mason\My Documents\Visual Studio 2015\Projects\Lab2\Debug\Lab2.exe
+  Lab2.vcxproj -> \\warehouse2.seasad.wustl.edu\home\m.mason\My Documents\Visual Studio 2015\Projects\Lab2\Debug\Lab2.pdb (Full PDB)
