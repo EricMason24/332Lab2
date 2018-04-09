@@ -15,6 +15,12 @@ using namespace std;
 
 shared_ptr<Game> Game::gptr = nullptr;
 
+//destructor for game
+//do nothing because we are using shared pointers
+Game::~Game() {
+
+}
+
 shared_ptr<Game> Game::instance() {
 	if (gptr == nullptr) {
 		throw(InstanceNotAvailable);

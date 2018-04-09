@@ -24,8 +24,10 @@ struct Pair {
 	Pair();
 };
 
-enum errors { wrongNumberOfArguments = -1, cannotOpenTextFile = -2,  vectorPushedBadInput = -3, oneArgumentNoTextFile = -4, twoArgumentsNoShuffle = -5, noArguments = -6, emptyDeck = -7, badInput = -9, InstanceNotAvailable = -10,
-	gameAlreadyStarted = -11, unknownGame = -12, allocException = -13, noGameInProgress = -14, alreadyPlaying = -15, outOfBoundsException = -8, Success = 0, UsageMessageRequested = 3};
+enum errors {
+	wrongNumberOfArguments = -1, cannotOpenTextFile = -2, vectorPushedBadInput = -3, oneArgumentNoTextFile = -4, twoArgumentsNoShuffle = -5, noArguments = -6, emptyDeck = -7, badInput = -9, InstanceNotAvailable = -10,
+	gameAlreadyStarted = -11, unknownGame = -12, allocException = -13, noGameInProgress = -14, alreadyPlaying = -15, bothDecksEmpty = -16, outOfBoundsException = -8, Success = 0, UsageMessageRequested = 3
+};
 
 Card::Suits getSuit(char);
 
