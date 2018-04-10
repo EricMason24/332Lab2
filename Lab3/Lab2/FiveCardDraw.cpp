@@ -1,3 +1,7 @@
+/*
+description
+*/
+
 #include "stdafx.h"
 
 #include "Deck.h"
@@ -94,6 +98,9 @@ int FiveCardDraw::before_turn(Player & p) {
 int FiveCardDraw::turn(Player & p) {
 	bool deckEmpty = mainD.sizeofDeck() == 0;
 	int cardsNeeded = 5 - p.playerHand.sizeOfHand();
+	if (deckEmpty) {
+		discard.shuffleDeck();
+	}
 	for (int i = 0; i < cardsNeeded; ++i) {
 		if (!deckEmpty) {
 			p.playerHand << mainD;
@@ -120,7 +127,7 @@ int FiveCardDraw::after_turn(Player & p) {
 
 int FiveCardDraw::before_round() {
 	mainD.shuffleDeck();
-	cout << (*players[cDealer & players.size()]).name << " is dealing..." << endl;
+	cout << (*players[cDealer % players.size()]).name << " is dealing...\n" << endl;
 	for (int i = 0; i < 5; ++i) {
 		for (size_t j = 0; j < players.size(); ++j) {
 			size_t pos = (cDealer + 1 + j) % players.size();
@@ -166,9 +173,13 @@ void FiveCardDraw::winsLosses() {
 	++(*temp[0]).wins;
 	--(*temp[0]).losses;
 	size_t i = 0;
-	while (!((*temp[i + 1]).playerHand < (*temp[i]).playerHand) && i < temp.size() - 1) {
+	while (!pokerRank((*temp[i]).playerHand, (*temp[i + 1]).playerHand)) {
 		++(*temp[i + 1]).wins;
 		--(*temp[i + 1]).losses;
+		++i;
+		if (i >= temp.size() - 1) {
+			break;
+		}
 	}
 	for (i = 0; i < temp.size(); ++i) {
 		cout << "Player's name: " << (*temp[i]).name <<

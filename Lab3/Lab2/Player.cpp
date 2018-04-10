@@ -23,7 +23,7 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 	string fileName(inputName);
 	ifs.open(fileName + ".txt");
 	if (!ifs.is_open()) {
-		cout << "Cannot open source file '" << inputName << ".txt'." << endl;
+		cout << "Cannot open source file '" << inputName << ".txt'.\n" << endl;
 	}
 	else {
 		string line, word, wordtype;
@@ -57,6 +57,6 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 };
 
 ostream & operator<<(ostream & o, const Player & p) {
-	o << n << " " << p.name << " " << w << " " << p.wins << " " << l << " " << p.losses << endl;
+	o << n << " " << p.name << endl << w << " " << p.wins << endl << l << " " << p.losses << endl;
 	return o;
 }

@@ -274,6 +274,9 @@ pokerHands getPRank(const Hand & h, Pair & p1, Pair & p2) {
 	if (straight) {
 		return pokerHands::straight;
 	}
+	if (p1.numDups == 3 || p2.numDups == 3) {
+		return pokerHands::threeOKind;
+	}
 	if (p1.numDups == 2 && p2.numDups == 2) {
 		return pokerHands::twoPair;
 	}
@@ -366,14 +369,20 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 			return (highPair1 > highPair2) || ((highPair1 == highPair2) && (lowPair1 > lowPair2));
 			break;
 		case pokerHands::flush:
-			highCard1 = h1.cards.at(h1.cards.size() - 1).rank;
-			highCard2 = h1.cards.at(h2.cards.size() - 1).rank;
-			return highCard1 > highCard1;
+			for (int i = 4; i >= 0; --i) {
+				if (h2.cards[i].rank < h1.cards[i].rank) {
+					return true;
+				}
+				if (h2.cards[i].rank > h1.cards[i].rank) { 
+					return false;
+				}
+			}
+			return false;
 			break;
 		case pokerHands::straight:
 			highCard1 = h1.cards.at(h1.cards.size() - 1).rank;
 			highCard2 = h1.cards.at(h2.cards.size() - 1).rank;
-			return highCard1 > highCard1;
+			return highCard1 > highCard2;
 			break;
 		case pokerHands::threeOKind:
 			if (h1Pair1.numDups == 3) {
@@ -415,9 +424,15 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 			return highPair1 > highPair2;
 			break;
 		case pokerHands::noRank:
-			highCard1 = h1.cards.at(h1.cards.size() - 1).rank;
-			highCard2 = h2.cards.at(h2.cards.size() - 1).rank;
-			return highCard1 > highCard2;
+			for (int i = 4; i >= 0; --i) {
+				if (h2.cards[i].rank < h1.cards[i].rank) {
+					return true;
+				}
+				if (h2.cards[i].rank > h1.cards[i].rank) {
+					return false;
+				}
+			}
+			return false;
 			break;
 		default:
 			return false;

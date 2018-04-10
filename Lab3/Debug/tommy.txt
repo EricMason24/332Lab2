@@ -1,0 +1,3 @@
+name tommy
+wins 7
+losses 3
