@@ -3,6 +3,7 @@
 #include "PlayingCard.h"
 #include "Player.h"
 #include "Game.h"
+#include "FiveCardDraw.h"
 #include <vector>
 #include <memory>
 #include <string>
@@ -25,7 +26,6 @@ shared_ptr<Game> Game::instance() {
 	if (gptr == nullptr) {
 		throw(InstanceNotAvailable);
 	}
-	//is this the right copy???
 	return gptr;
 }
 
@@ -37,8 +37,7 @@ void Game::startGame(const string & func) {
 		throw(unknownGame);
 	}
 	try {
-		//gptr = make_shared<FiveCardDraw>();
-		
+		gptr = make_shared<FiveCardDraw>();
 	}
 	catch (...) {
 		throw(allocException);
@@ -61,7 +60,7 @@ void Game::addPlayer(const string & p) {
 	//char * name = (char *)p.c_str();
 	//Player newP();
 	shared_ptr<Player> pp =  make_shared<Player>((char *)p.c_str());
-
+	players.push_back(pp);
 }
 
 shared_ptr<Player> Game::findPlayer(const string & name) {
@@ -71,4 +70,8 @@ shared_ptr<Player> Game::findPlayer(const string & name) {
 		}
 	}
 	return nullptr;
+}
+
+size_t Game::getNumPlayers() {
+	return players.size();
 }

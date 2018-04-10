@@ -20,9 +20,10 @@ string l = "losses";
 //constructor for a Player given a file, it will open the file and parse wins and losses
 Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHand() {
 	ifstream ifs;
-	ifs.open(inputName);
+	string fileName(inputName);
+	ifs.open(fileName + ".txt");
 	if (!ifs.is_open()) {
-		cout << "PlayerLab3" << " cannot open source file " << inputName << " to read from" << endl;
+		cout << "Cannot open source file '" << inputName << "'." << endl;
 	}
 	else {
 		string line, word, wordtype;
@@ -56,6 +57,6 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 };
 
 ostream & operator<<(ostream & o, const Player & p) {
-	o << p.name << " " << p.wins << " " << p.losses << endl;
+	o << n << " " << p.name << " " << w << " " << p.wins << " " << l << " " << p.losses << endl;
 	return o;
 }

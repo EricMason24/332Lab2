@@ -1,6 +1,6 @@
 ﻿  Lab2.cpp
-  Game.cpp
-  FiveCardDraw.cpp
-  Generating Code...
+\\warehouse2.seasad.wustl.edu\home\tommy.blackwell\my documents\visual studio 2015\projects\lab3\lab2\lab2.cpp(32): warning C4101: 'e': unreferenced local variable
+\\warehouse2.seasad.wustl.edu\home\tommy.blackwell\my documents\visual studio 2015\projects\lab3\lab2\lab2.cpp(39): warning C4101: 'e': unreferenced local variable
+\\warehouse2.seasad.wustl.edu\home\tommy.blackwell\my documents\visual studio 2015\projects\lab3\lab2\lab2.cpp(48): warning C4101: 'e': unreferenced local variable
   Lab2.vcxproj -> \\warehouse2.seasad.wustl.edu\home\tommy.blackwell\My Documents\Visual Studio 2015\Projects\Lab3\Debug\Lab2.exe
   Lab2.vcxproj -> \\warehouse2.seasad.wustl.edu\home\tommy.blackwell\My Documents\Visual Studio 2015\Projects\Lab3\Debug\Lab2.pdb (Full PDB)
