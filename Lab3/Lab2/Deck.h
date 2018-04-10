@@ -3,6 +3,7 @@
 
 
 #include "PlayingCard.h"
+#include "Hand.h"
 #include <vector>
 #include <string>
 #include <iostream>

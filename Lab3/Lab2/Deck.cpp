@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Deck.h"
+#include "Hand.h"
 #include "PlayingCard.h"
 #include <vector>
 #include <string>
