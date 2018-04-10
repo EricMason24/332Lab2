@@ -3,8 +3,8 @@
 
 /* PROBLEMS (may be others too)
 reading from player file does not set wins and losses properly
-replacing cards (answering y to would you like to replace any cards)
 sometimes program just stops after end of before_round, may be winslosses function
+player leaves then joins, dealer gets messed up (probably don't need to worry about)
 */
 
 #include "stdafx.h"
@@ -52,9 +52,10 @@ int main(int argc, char * argv[])
 		while ((*gptr).getNumPlayers() > 1) {
 			// need try catches here
 			(*gptr).before_round();
-			//(*gptr).round();
+			(*gptr).round();
 			(*gptr).after_round();
 		}
+		(*gptr).gameOver();
 	}
 	/*string shuffleCmd = "-shuffle";
 	char * file = "";

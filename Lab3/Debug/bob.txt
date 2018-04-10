@@ -1,1 +1,1 @@
-name bob wins 0 losses 1
+name bob wins 1 losses 0

@@ -75,3 +75,12 @@ shared_ptr<Player> Game::findPlayer(const string & name) {
 size_t Game::getNumPlayers() {
 	return players.size();
 }
+
+void Game::gameOver() {
+	for (size_t i = 0; i < players.size(); ++i) {
+		ofstream ofs((*players[i]).name + ".txt");
+		ofs << (*players[i]);
+		ofs.close();
+		cout << "Player '" << (*players[i]).name << "' has left the game.\n" << endl;
+	}
+}

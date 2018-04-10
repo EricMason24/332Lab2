@@ -26,7 +26,7 @@ int FiveCardDraw::before_turn(Player & p) {
 	string discardstr = "";
 	string cardPos = "";
 	cout << "Player's name: " << p.name << endl;
-	cout << "	Hand: " << p.playerHand << endl;
+	cout << "	Hand: " << p.playerHand << "\n" << endl;
 	cout << "Discard any Cards from hand? y/n ?" << endl;
 	//accepts a cin argument (either y or n) and then starts the discard process
 	getline(cin, discardstr);
@@ -35,7 +35,7 @@ int FiveCardDraw::before_turn(Player & p) {
 		bool invalidResponse = true;
 		//will continue prompting player for cards to discard until proper values have been entered
 		while (invalidResponse) {
-			cout << "enter valid card positions (0 - 4) to discard, with a space between each position" << endl;
+			cout << "Enter valid card positions (0 - 4) to discard, with spaces in between." << endl;
 			getline(cin, cardPos);
 			istringstream iss(cardPos);
 			string pos;
@@ -46,7 +46,7 @@ int FiveCardDraw::before_turn(Player & p) {
 					invalidResponse = true;
 					vector<int> empty;
 					posVector = empty;
-					cout << "Please enter a valid response" << endl;
+					cout << "Please enter a valid response." << endl;
 					break;
 				}
 				//convert string to int and push to vector
@@ -56,7 +56,7 @@ int FiveCardDraw::before_turn(Player & p) {
 				invalidResponse = true;
 				vector<int> empty;
 				posVector = empty;
-				cout << "Please less than 5 positions" << endl;
+				cout << "Please fewer than 5 positions." << endl;
 				break;
 			}
 			//check for repeated positions in vector, and reset loop if there are any
@@ -71,7 +71,7 @@ int FiveCardDraw::before_turn(Player & p) {
 						repeateFound = true;
 						vector<int> empty;
 						posVector = empty;
-						cout << "Please do not repeat positions" << endl;
+						cout << "Please do not repeat positions." << endl;
 						break;
 					}
 				}
@@ -80,18 +80,19 @@ int FiveCardDraw::before_turn(Player & p) {
 		//add cards to discard deck and then remove cards from player hand
 		//done in two seperate loops because if they are in the same loop, the positions will change after removing cards from the playerHand, causing errors.
 		for (size_t i = 0; i < posVector.size(); ++i) {
-			discard.add_card(p.playerHand[i]);
+			discard.add_card(p.playerHand[posVector[i]]);
 		}
-		for (size_t i = 0; i < posVector.size(); ++i) {
-			p.playerHand.remove_card(i);
+		sort(posVector.begin(), posVector.end());
+		for (auto i = posVector.rbegin(); i != posVector.rend(); ++i) { // iterate backwards so positions don't change mid-deletion
+			p.playerHand.remove_card(*i);
 		}
-
 	}
+	cout << endl;
 	return Success;
 }
 
 int FiveCardDraw::turn(Player & p) {
-	bool deckEmpty = mainD.sizeofDeck() > 0;
+	bool deckEmpty = mainD.sizeofDeck() == 0;
 	int cardsNeeded = 5 - p.playerHand.sizeOfHand();
 	for (int i = 0; i < cardsNeeded; ++i) {
 		if (!deckEmpty) {
@@ -113,7 +114,7 @@ int FiveCardDraw::turn(Player & p) {
 
 int FiveCardDraw::after_turn(Player & p) {
 	cout << "Player's name: " << p.name << endl;
-	cout << "	Hand: " << p.playerHand << endl;
+	cout << "	Hand: " << p.playerHand << "\n" << endl;
 	return Success;
 }
 
@@ -173,7 +174,7 @@ void FiveCardDraw::winsLosses() {
 		cout << "Player's name: " << (*temp[i]).name <<
 			endl << "	Wins: " << (*temp[i]).wins <<
 			endl << "	Losses: " << (*temp[i]).losses <<
-			endl << "	Hand: " << (*temp[i]).playerHand << endl;
+			endl << "	Hand: " << (*temp[i]).playerHand << "\n" << endl;
 	}
 }
 
@@ -197,8 +198,8 @@ void FiveCardDraw::recycleDeck() {
 		for (size_t j = 0; j < (*players[i]).playerHand.sizeOfHand(); ++j) { // add player's hand to main deck
 			mainD.add_card((*players[i]).playerHand[j]);
 		}
-		for (size_t j = 0; j < (*players[i]).playerHand.sizeOfHand(); ++j) { // remove all cards from player's hand
-			(*players[i]).playerHand.remove_card(j);
+		while ((*players[i]).playerHand.sizeOfHand() != 0) { // remove all cards from player's hand
+			(*players[i]).playerHand.remove_card(0);
 		}
 	}
 }
@@ -235,6 +236,7 @@ void FiveCardDraw::askLeave() {
 		cout << "Would any players like to leave the game at this point? y/n ?" << endl;
 		getline(cin, s);
 	}
+	cout << endl;
 }
 
 void FiveCardDraw::askJoin() {
@@ -261,4 +263,5 @@ void FiveCardDraw::askJoin() {
 		cout << "Would any players like to join the game at this point? y/n ?" << endl;
 		getline(cin, s);
 	}
+	cout << endl;
 }

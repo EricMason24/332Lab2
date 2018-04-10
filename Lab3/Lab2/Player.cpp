@@ -23,7 +23,7 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 	string fileName(inputName);
 	ifs.open(fileName + ".txt");
 	if (!ifs.is_open()) {
-		cout << "Cannot open source file '" << inputName << "'." << endl;
+		cout << "Cannot open source file '" << inputName << ".txt'." << endl;
 	}
 	else {
 		string line, word, wordtype;

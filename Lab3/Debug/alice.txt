@@ -1,1 +1,1 @@
-name alice wins 1 losses 0
+name alice wins 0 losses 1

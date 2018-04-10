@@ -23,6 +23,7 @@ public:
 	virtual int round() = 0;
 	virtual int after_round() = 0;
 	size_t getNumPlayers();
+	void gameOver();
 protected:
 	static shared_ptr<Game> gptr;
 	Deck mainD;
