@@ -1,5 +1,6 @@
-// Deck.cpp : Implements the class that represents a deck of playing cards that is to be used throughout the Hand and Deck lab 
-// Created by Eric Mason on 3/20/2018
+// Deck.cpp
+// Defines a deck class that is filled with cards.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
 #include "Deck.h"
@@ -215,6 +216,9 @@ ostream &operator<< (ostream &out, const Deck &d) {
 
 //overloads the << operator to unload the last card in the inputted deck into the designated hand, and then sorts that hand afterwards to ensure that the cards in the hand are in the correct order
 void operator<<(Hand & h, Deck & d){
+	if (d.deck.size() == 0) {
+		return;
+	}
 	Card c = d.deck.at(d.deck.size()-1);
 	d.deck.pop_back();
 	h.cards.push_back(c);

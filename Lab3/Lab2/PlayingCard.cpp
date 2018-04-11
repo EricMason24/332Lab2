@@ -1,5 +1,6 @@
-// PlayingCard.cpp : Implements the struct that represents a playing card that is to be used throughout the Cards lab 
-// Created by Eric Mason on 2/4/2018\
+// PlayingCard.cpp
+// Defines a card struct that has a suit and rank and can be compared to other cards.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
 #include "PlayingCard.h"

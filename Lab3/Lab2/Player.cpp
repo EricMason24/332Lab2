@@ -1,5 +1,6 @@
-// Player.cpp : Implements the struct that represents a player in a poker game
-// Created by Eric Mason on 4/4/2018
+// Player.cpp
+// Defines a player struct which has a hand, number of wins and losses, and a name.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
 #include "Deck.h"

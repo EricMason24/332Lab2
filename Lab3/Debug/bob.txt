@@ -1,3 +1,0 @@
-name bob
-wins 1
-losses 1

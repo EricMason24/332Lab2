@@ -1,4 +1,7 @@
-//Deck declarations which declares a deck class that is filled with cards
+// Deck.h
+// Declares a deck class that is filled with cards.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
+
 #pragma once
 
 

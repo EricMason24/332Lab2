@@ -1,3 +1,0 @@
-name alice
-wins 0
-losses 2

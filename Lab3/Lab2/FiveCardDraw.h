@@ -1,6 +1,6 @@
-/*
-description
-*/
+// FiveCardDraw.h
+// Implements the game class for a specific game of Five Card Draw.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #pragma once
 

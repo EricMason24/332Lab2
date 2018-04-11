@@ -1,6 +1,6 @@
-/*
-description
-*/
+// FiveCardDraw.cpp
+// Implements the game class for a specific game of Five Card Draw.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
 
@@ -127,11 +127,17 @@ int FiveCardDraw::after_turn(Player & p) {
 
 int FiveCardDraw::before_round() {
 	mainD.shuffleDeck();
+	cout << mainD.sizeofDeck() << endl;
 	cout << (*players[cDealer % players.size()]).name << " is dealing...\n" << endl;
 	for (int i = 0; i < 5; ++i) {
 		for (size_t j = 0; j < players.size(); ++j) {
-			size_t pos = (cDealer + 1 + j) % players.size();
-			(*players[pos]).playerHand << mainD;
+			if (mainD.sizeofDeck() != 0) {
+				size_t pos = (cDealer + 1 + j) % players.size();
+				(*players[pos]).playerHand << mainD;
+			}
+			else {
+				throw(tooManyPlayers);
+			}
 		}
 	}
 	for (size_t j = 0; j < players.size(); ++j) {
@@ -264,7 +270,7 @@ void FiveCardDraw::askJoin() {
 				}
 				catch (errors & e) {
 					if (e == alreadyPlaying) {
-						cout << "Player already in game." << endl;
+						cout << "Player " << s << " already in game.\n" << endl;
 					}
 				}
 				cout << "Insert player's name, or 'n' to bypass: " << endl;

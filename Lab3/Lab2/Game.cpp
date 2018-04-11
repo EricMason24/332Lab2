@@ -1,3 +1,7 @@
+// Game.cpp
+// Abstract class for a game object, which controls players and main deck and provides virtual methods for gameplay.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
+
 #include "stdafx.h"
 #include "Deck.h"
 #include "PlayingCard.h"
@@ -45,10 +49,12 @@ void Game::startGame(const string & func) {
 }
 
 void Game::stopGame() {
-	if (gptr != nullptr) {
-		throw(gameAlreadyStarted);
+	if (gptr == nullptr) {
+		throw(noGameInProgress);
 	}
+	(*gptr).gameOver();
 	gptr = nullptr;
+	cout << "Game stopped.\n" << endl;
 }
 
 void Game::addPlayer(const string & p) {

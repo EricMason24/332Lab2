@@ -1,5 +1,6 @@
-// PlayingCard.h : Defines the struct that represents a playing card that is to be used throughout the Cards lab 
-// Created by Eric Mason on 2/4/2018
+// PlayingCard.h
+// Declares a card struct that has a suit and rank and can be compared to other cards.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #pragma once
 #include <vector>
@@ -26,7 +27,7 @@ struct Pair {
 
 enum errors {
 	wrongNumberOfArguments = -1, cannotOpenTextFile = -2, vectorPushedBadInput = -3, oneArgumentNoTextFile = -4, twoArgumentsNoShuffle = -5, noArguments = -6, emptyDeck = -7, badInput = -9, InstanceNotAvailable = -10,
-	gameAlreadyStarted = -11, unknownGame = -12, allocException = -13, noGameInProgress = -14, alreadyPlaying = -15, bothDecksEmpty = -16, outOfBoundsException = -8, Success = 0, UsageMessageRequested = 3
+	gameAlreadyStarted = -11, unknownGame = -12, allocException = -13, noGameInProgress = -14, alreadyPlaying = -15, bothDecksEmpty = -16, tooManyPlayers = -17, outOfBoundsException = -8, Success = 0, UsageMessageRequested = 3
 };
 
 Card::Suits getSuit(char);

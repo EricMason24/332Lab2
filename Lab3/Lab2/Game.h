@@ -1,3 +1,7 @@
+// Game.h
+// Abstract class for a game object, which controls players and main deck and provides virtual methods for gameplay.
+// Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
+
 #pragma once
 
 #include <string>

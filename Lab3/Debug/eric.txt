@@ -1,3 +1,0 @@
-name eric
-wins 3
-losses 7
