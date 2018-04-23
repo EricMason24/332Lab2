@@ -1,0 +1,3 @@
+name tommt
+wins 1
+losses 0

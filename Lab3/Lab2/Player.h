@@ -11,7 +11,11 @@ using namespace std;
 
 struct Player {
 	string name;
+	int currBet;
+	bool hasFolded;
+	bool outOfChips;
 	Hand playerHand;
+	unsigned int chips;
 	unsigned int wins;
 	unsigned int losses;
 	Player(char *);

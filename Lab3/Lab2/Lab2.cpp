@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "Deck.h"
+#include "Hand.h"
 #include "PlayingCard.h"
 #include "Game.h"
 #include "FiveCardDraw.h"
@@ -79,20 +80,30 @@ int main(int argc, char * argv[])
 			}
 		}
 		//start the rounds process (begin the game)
+		bool isRoundOver = false;
 		while ((*gptr).getNumPlayers() > 1) {
 			try {
 				(*gptr).before_round();
 			}
-			catch (errors & e) {
-				cout << "Too many players to deal everyone 5 cards.\n" << endl;
-				break;
+			catch (errors e) {
+				if (e == roundOver) {
+					isRoundOver = true;
+				}
+				else {
+					cout << "Too many players to deal everyone 5 cards.\n" << endl;
+					break;
+				}
+
 			}
-			int res = (*gptr).round();
-			if (res != 0) {
-				cout << "Both main deck and discard deck have run out of cards. Stopping game.\n" << endl;
-				break;
+			if (!isRoundOver) {
+				int res = (*gptr).round();
+				if (res != 0) {
+					cout << "Both main deck and discard deck have run out of cards. Stopping game.\n" << endl;
+					break;
+				}
+				(*gptr).after_round();
 			}
-			(*gptr).after_round();
+
 		}
 		//end game
 		Game::stopGame();

@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include "Deck.h"
+#include "Hand.h"
 #include "Player.h"
 #include <vector>
 

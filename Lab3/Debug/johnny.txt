@@ -1,0 +1,4 @@
+name johnny
+wins 3
+losses 0
+chips 25

@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "Deck.h"
+#include "Hand.h"
 #include "PlayingCard.h"
 #include "Player.h"
 #include <vector>
@@ -17,9 +18,10 @@
 string n = "name";
 string w = "wins";
 string l = "losses";
+string c = "chips";
 
 //constructor for a Player given a file, it will open the file and parse wins and losses
-Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHand() {
+Player::Player(char * inputName) : name(inputName), chips(20),wins(0), losses(0), playerHand(),hasFolded(false),outOfChips(false), currBet(0) {
 	ifstream ifs;
 	string fileName(inputName);
 	ifs.open(fileName + ".txt");
@@ -28,12 +30,13 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 	}
 	else {
 		string line, word, wordtype;
-		bool nCheck = false, wCheck = false, lCheck = false;
+		bool nCheck = false, wCheck = false, lCheck = false, cCheck = false;
 		while (getline(ifs, line)) {
 			istringstream iss(line);
 			if (!(iss >> word >> wordtype)) {
 				wins = 0;
 				losses = 0;
+				chips = 20;
 				return;
 			}
 			if (word == n) {
@@ -48,16 +51,21 @@ Player::Player(char * inputName) : name(inputName), wins(0), losses(0), playerHa
 				losses = stoi(wordtype);
 				lCheck = true;
 			}
+			else if (word == c) {
+				chips = stoi(wordtype);
+				cCheck = true;
+			}
 		}
 		//name, wins and losses don't exist in file, reset wins and losses
-		if (!nCheck || !wCheck || !lCheck) {
+		if (!nCheck || !wCheck || !lCheck || !cCheck) {
 			wins = 0;
 			losses = 0;
+			chips = 20;
 		}
 	}
 };
 
 ostream & operator<<(ostream & o, const Player & p) {
-	o << n << " " << p.name << endl << w << " " << p.wins << endl << l << " " << p.losses << endl;
+	o << n << " " << p.name << endl << w << " " << p.wins << endl << l << " " << p.losses << endl << c << " " << p.chips << endl;
 	return o;
 }

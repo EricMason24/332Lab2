@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include "Deck.h"
+#include "Hand.h"
 #include "Player.h"
 #include <vector>
 #include "Game.h"
@@ -21,7 +22,13 @@ protected:
 	void recycleDeck();
 	void askLeave();
 	void askJoin();
+	void checkChips();
+	bool check(int);
+	void fcr(int);
+	int bettingPhase();
 public:
+	int pot;
+	int currBet;
 	FiveCardDraw();
 	virtual int before_turn(Player &);
 	virtual int turn(Player &);
