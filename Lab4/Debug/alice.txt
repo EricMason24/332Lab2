@@ -1,0 +1,4 @@
+name alice
+wins 1
+losses 3
+chips 15

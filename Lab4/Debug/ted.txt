@@ -1,0 +1,3 @@
+name ted
+wins 1
+losses 3
