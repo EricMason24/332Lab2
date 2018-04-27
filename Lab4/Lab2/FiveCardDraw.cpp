@@ -153,7 +153,8 @@ bool FiveCardDraw::check(int playerPos) {
 				}
 				else {
 					validBet = true;
-					if (currP.chips - stoi(bet) > 0) {
+					int chips = currP.chips;
+					if (chips - stoi(bet) > 0) {
 						currP.chips -= stoi(bet);
 						currBet = stoi(bet);
 						currP.currBet = stoi(bet);
@@ -196,8 +197,10 @@ void FiveCardDraw::fcr(int playerPos) {
 			}
 			if (result == "c") {
 				int newBet = currBet - currP.currBet;
-				//cout << "newBet " << newBet << endl;
-				if (newBet > 0) {
+				cout << "newBet: " << newBet << endl;
+				cout << "cChips: " << currP.chips << endl;
+				int cChips = currP.chips;
+				if ((cChips - newBet) > 0) {
 					currP.currBet += newBet;
 					pot += newBet;
 					currP.chips -= newBet;
@@ -254,6 +257,16 @@ int FiveCardDraw::bettingPhase() {
 	//have players bet before round begins
 	bool hasBet = false;
 	bool allSet = false;
+	int numBettingPlayers = 0;
+	for (size_t i = 0; i < players.size(); ++i) {
+		if (!(*players[i]).outOfChips){
+			++numBettingPlayers;
+		}
+	}
+	if (numBettingPlayers == 1) {
+		cout << "Only one player can bet, so moving on" << endl;
+		return Success;
+	}
 	while (!allSet) {
 		for (size_t j = 0; j < players.size(); ++j) {
 			size_t pos = (cDealer + 1 + j) % players.size();

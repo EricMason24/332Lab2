@@ -14,6 +14,7 @@ struct Card {
 	Ranks rank;
 	bool operator< (const Card &) const;
 	bool operator== (const Card &) const;
+	bool isFaceUp;
 	Card();  
 	Card(Card::Suits, Card::Ranks);
 	Card(const Card &);

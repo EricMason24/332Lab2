@@ -21,6 +21,7 @@ class Hand {
 	friend ostream &operator<<(ostream &, const Hand &);
 	friend void operator<<(Hand &, Deck &);
 	friend bool pokerRank(const Hand &, const Hand &);
+	friend void dealFaceDown(Hand &, Deck &);
 	friend pokerHands getPRank(const Hand &, Pair &, Pair &);
 private:
 	vector<Card> cards;
@@ -34,12 +35,15 @@ public:
 	bool operator< (const Hand &) const;
 	const string toString();
 	Card operator[] (size_t);
+	string getRealHand();
 	void remove_card(size_t);
 };
 
 ostream &operator<<(ostream &, const Hand &);
 
 void operator<<(Hand &, Deck &);
+
+void dealFaceDown(Hand &, Deck &);
 
 pokerHands getPRank(const Hand &, Pair &, Pair &);
 

@@ -36,6 +36,7 @@ vector<Card> emptyDeck2;
 Deck::Deck() : deck(emptyDeck2) {};
 
 void Deck::add_card(Card c) {
+	c.isFaceUp = true;
 	deck.push_back(c);
 }
 

@@ -14,14 +14,14 @@ using namespace std;
 
 //default constructor for a card
 Card::Card()
-	:rank(Card::Ranks::noRank), suit(Card::Suits::noSuit) {};
+	:rank(Card::Ranks::noRank), suit(Card::Suits::noSuit), isFaceUp(true) {};
 
 Card::Card(Card::Suits s, Card::Ranks r)
-	: suit(s), rank(r) {};
+	: suit(s), rank(r), isFaceUp(true) {};
 
 //copy constructor for a card
 Card::Card(const Card & c)
-	:rank(c.rank), suit(c.suit) {};
+	:rank(c.rank), suit(c.suit), isFaceUp(true) {};
 
 //overrides the == operator to compare 2 cards, returning true only if the rank and suit are the same for both cards
 bool Card::operator==(const Card & c) const {

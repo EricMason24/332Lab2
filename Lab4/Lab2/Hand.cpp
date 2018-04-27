@@ -81,9 +81,23 @@ const string Hand::toString() {
 //will return the inputed ostream with the hand's cards written in order with a space inbetween
 ostream &operator<<(ostream & out, const Hand & h) {
 	for (size_t i = 0; i < h.cards.size(); ++i) {
-		out << getCard(h.cards.at(i)) + " ";
+		if (!h.cards.at(i).isFaceUp) {
+			out << "** ";
+		}
+		else {
+			out << getCard(h.cards.at(i)) + " ";
+		}
 	}
 	return out;
+}
+
+//returns a string of all the cards, even if they are facedown
+string Hand::getRealHand() {
+	string s = "";
+	for (size_t i = 0; i < cards.size(); ++i) {
+		s += getCard(cards.at(i)) + " ";
+	}
+	return s;
 }
 
 //overrides the operator[] and returns the card at that location, if that location does not exist, an out of range exception will be thrown, which in turn will cause an outOfBounds Exception
@@ -113,6 +127,17 @@ void Hand::remove_card(size_t loc) {
 	}
 
 
+}
+
+void dealFaceDown(Hand & h, Deck & d) {
+	if (d.deck.size() == 0) {
+		return;
+	}
+	Card c = d.deck.at(d.deck.size() - 1);
+	c.isFaceUp = false;
+	d.deck.pop_back();
+	h.cards.push_back(c);
+	sort(h.cards.begin(), h.cards.end());
 }
 
 
