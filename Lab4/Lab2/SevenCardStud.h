@@ -40,4 +40,5 @@ public:
 	virtual int after_round();
 };
 
-bool poker_rank(shared_ptr<Player>, shared_ptr<Player>);
+void combinationPoker(Player &);
+bool studPoker_rank(shared_ptr<Player>, shared_ptr<Player>);

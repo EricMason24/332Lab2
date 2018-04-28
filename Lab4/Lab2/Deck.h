@@ -19,6 +19,7 @@ class Deck {
 	friend ostream &operator<<(ostream &, const Deck &);
 	friend void operator<<(Hand &, Deck &);
 	friend void dealFaceDown(Hand &, Deck &);
+	friend void dealFaceUp(Hand &, Deck &);
 	friend bool pokerRank(const Hand &, const Hand &);
 private:
 	vector<Card> deck;

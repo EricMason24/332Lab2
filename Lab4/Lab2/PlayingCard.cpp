@@ -21,7 +21,7 @@ Card::Card(Card::Suits s, Card::Ranks r)
 
 //copy constructor for a card
 Card::Card(const Card & c)
-	:rank(c.rank), suit(c.suit), isFaceUp(true) {};
+	:rank(c.rank), suit(c.suit), isFaceUp(c.isFaceUp) {};
 
 //overrides the == operator to compare 2 cards, returning true only if the rank and suit are the same for both cards
 bool Card::operator==(const Card & c) const {

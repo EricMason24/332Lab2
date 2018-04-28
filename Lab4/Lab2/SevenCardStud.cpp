@@ -32,24 +32,33 @@ int SevenCardStud::before_turn(Player & p) {
 	return Success;
 }
 
-//determines how many cards the player discarded in the before_turn function, and based on that, deals them cards from either the discard or main deck to the player's hand
+//determines which turn it currently is in the round, and deals cards to the player in accordance to this turn. 
 int SevenCardStud::turn(Player & p) {
+	if (mainD.sizeofDeck() == 0) {
+		return emptyDeck;
+	}
 	switch (turnNum) {
 	case 0: 
-		dealFaceDown(p.playerHand, mainD);
-		dealFaceDown(p.playerHand, mainD);
-		p.playerHand << mainD;
+		for (int i = 0; i < 2; ++i) {
+			dealFaceDown(p.playerHand, mainD);
+			if (mainD.sizeofDeck() == 0) {
+				return emptyDeck;
+			}
+		}
+		cout << p.playerHand << endl;
+		dealFaceUp(p.playerHand, mainD);
 		break;
 	case 4:
 		dealFaceDown(p.playerHand, mainD);
 		break;
 	default:
-		p.playerHand << mainD;
+		dealFaceUp(p.playerHand, mainD);
+		break;
 	}
 	return Success;
 }
 
-//prints the players current name and hand
+//prints the players current name and hand, with all cards being face up
 int SevenCardStud::after_turn(Player & p) {
 	cout << "\n" << "Player's name: " << p.name << endl;
 	string realHand = p.playerHand.getRealHand();
@@ -202,6 +211,8 @@ int SevenCardStud::bettingPhase() {
 			Player & currP = *players[pos];
 			if (!currP.hasFolded && !currP.outOfChips) {
 				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." << endl;
+				cout << "\n" << "Curret round bet is: " << currBet << " chips." << endl;
+				cout << "\n" << currP.name << "'s current bet this round is: " << currP.currBet << " chips." << endl;
 				printHands(currP);
 				if (!hasBet) {
 					hasBet = check(pos);
@@ -222,11 +233,6 @@ int SevenCardStud::bettingPhase() {
 		if (hasBet) {
 			for (size_t j = 0; j < players.size(); ++j) {
 				Player & currP = *players[j];
-				/* cout << "name " << currP.name << endl;
-				cout << "folded " << currP.hasFolded << endl;
-				cout << "outofC " << currP.outOfChips << endl;
-				cout << "currbet " << currP.currBet << endl;
-				cout << "round bet " << currBet << endl; */
 				if (!currP.hasFolded && !currP.outOfChips && currBet != currP.currBet) {
 					allSet = false;
 				}
@@ -281,12 +287,12 @@ int SevenCardStud::bettingPhase() {
 
 //prints out all hands, with your hand being faceup
 void SevenCardStud::printHands(Player & p) {
-	cout << p.name << "'s Hand: " << p.playerHand.getRealHand() << endl;
+	cout << "\n" << p.name << "'s Hand: " << p.playerHand.getRealHand() << endl;
 	cout << "\n" << "Other Player Hands: " << endl;
-	for (int i = 0; i < players.size(); ++i) {
+	for (size_t i = 0; i < players.size(); ++i) {
 		if ((*players[i]).name != p.name) {
-			cout << "\n" << "Player's name: " << p.name <<
-				endl << "	Hand: " << p.playerHand << endl;
+			cout << "\n" << "Player's name: " << (*players[i]).name <<
+				endl << "	Hand: " << (*players[i]).playerHand << endl;
 		}
 	}
 }
@@ -312,7 +318,7 @@ int SevenCardStud::before_round() {
 
 //calls turn on all players, refilling their hand with the right amount of cards depending on what they discarded, and then prints out all current hands through after turn
 int SevenCardStud::round() {
-	int turnNum = 0;
+	turnNum = 0;
 	for (int i = 0; i < 5; ++i) {
 		for (size_t j = 0; j < players.size(); ++j) {
 			size_t pos = (cDealer + 1 + j) % players.size();
@@ -338,6 +344,7 @@ int SevenCardStud::round() {
 
 //gives the wins and losses of each player,shuffles the deck and prompts if anyone wants to leave or join the game, and assigning the next dealer as appropiate
 int SevenCardStud::after_round() {
+	cout << "after round" << endl;
 	winsLosses();
 	recycleDeck();
 	checkChips();
@@ -352,7 +359,11 @@ int SevenCardStud::after_round() {
 void SevenCardStud::winsLosses() {
 	int finalPosOfWinner = 0;
 	vector<shared_ptr<Player>> temp = players;
-	sort(temp.begin(), temp.end(), poker_rank);
+	cout << "before sort" << endl;
+	for (size_t i = 0; i < temp.size(); ++i) {
+		(*temp[i]).playerHand.sortCards();
+	}
+	sort(temp.begin(), temp.end(), studPoker_rank);
 	for (size_t i = 0; i < temp.size(); ++i) {
 		++(*temp[i]).losses;
 	}
@@ -418,7 +429,61 @@ void SevenCardStud::checkChips() {
 	}
 
 }
-bool poker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
+
+//taken from https://stackoverflow.com/questions/127704/algorithm-to-return-all-combinations-of-k-elements-from-n referenced from this piazza post: https://piazza.com/class/jcc6zondgla5pt?cid=479
+template <typename Iterator>
+bool next_combination(const Iterator first, Iterator k, const Iterator last)
+{
+	/* Credits: Mark Nelson http://marknelson.us */
+	if ((first == last) || (first == k) || (last == k))
+		return false;
+	Iterator i1 = first;
+	Iterator i2 = last;
+	++i1;
+	if (last == i1)
+		return false;
+	i1 = last;
+	--i1;
+	i1 = k;
+	--i2;
+	while (first != i1)
+	{
+		if (*--i1 < *i2)
+		{
+			Iterator j = k;
+			while (!(*i1 < *j)) ++j;
+			std::iter_swap(i1, j);
+			++i1;
+			++j;
+			i2 = k;
+			std::rotate(i1, j, last);
+			while (last != j)
+			{
+				++j;
+				++i2;
+			}
+			std::rotate(k, i2, last);
+			return true;
+		}
+	}
+	std::rotate(first, k, last);
+	return false;
+}
+
+void combinationPoker(Player & p) {
+	int handSize = 5;
+	vector<Card> & cards = p.playerHand.getCards();
+	Hand bHand;
+	Hand copyHand;
+	while (next_combination(cards.begin(), cards.begin() + handSize, cards.end())) {
+		if (bHand.sizeOfHand() == 0) {
+			
+		}
+	}
+}
+
+
+bool studPoker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 	if (p1 == nullptr) {
 		return false;
 	}
@@ -426,14 +491,11 @@ bool poker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 		return true;
 	}
 	else {
-		return pokerRank((*p1).playerHand, (*p2).playerHand);
+		return pokerRank((*p1).bestHand, (*p2).bestHand);
 	}
 }
 
 void SevenCardStud::recycleDeck() {
-	while (discard.sizeofDeck() > 0) { // add all cards in discard deck to first player's hand
-		(*players[0]).playerHand << discard;
-	};
 	for (size_t i = 0; i < players.size(); ++i) { // loop through players
 		for (size_t j = 0; j < (*players[i]).playerHand.sizeOfHand(); ++j) { // add player's hand to main deck
 			mainD.add_card((*players[i]).playerHand[j]);

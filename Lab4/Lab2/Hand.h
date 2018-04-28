@@ -12,7 +12,6 @@
 #include <iostream>
 
 using namespace std;
-
 class Deck;
 enum struct pokerHands { noRank, Pair, twoPair, threeOKind, straight, flush, fullHouse, fourOKind, straightF };
 
@@ -22,6 +21,7 @@ class Hand {
 	friend void operator<<(Hand &, Deck &);
 	friend bool pokerRank(const Hand &, const Hand &);
 	friend void dealFaceDown(Hand &, Deck &);
+	friend void dealFaceUp(Hand &, Deck &);
 	friend pokerHands getPRank(const Hand &, Pair &, Pair &);
 private:
 	vector<Card> cards;
@@ -37,6 +37,9 @@ public:
 	Card operator[] (size_t);
 	string getRealHand();
 	void remove_card(size_t);
+	vector<Card> & getCards();
+	void sortCards();
+	void setCards(vector<Card>::iterator, int);
 };
 
 ostream &operator<<(ostream &, const Hand &);
@@ -44,6 +47,8 @@ ostream &operator<<(ostream &, const Hand &);
 void operator<<(Hand &, Deck &);
 
 void dealFaceDown(Hand &, Deck &);
+
+void dealFaceUp(Hand &, Deck &);
 
 pokerHands getPRank(const Hand &, Pair &, Pair &);
 

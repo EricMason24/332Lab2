@@ -3,11 +3,12 @@
 // Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #pragma once
- 
+
 #include <string>
 #include "Deck.h"
 
 using namespace std;
+
 
 struct Player {
 	string name;
@@ -15,6 +16,7 @@ struct Player {
 	bool hasFolded;
 	bool outOfChips;
 	Hand playerHand;
+	Hand bestHand;
 	unsigned int chips;
 	unsigned int wins;
 	unsigned int losses;

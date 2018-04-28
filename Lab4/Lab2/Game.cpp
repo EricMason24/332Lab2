@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Game.h"
 #include "FiveCardDraw.h"
+#include "SevenCardStud.h"
 #include <vector>
 #include <memory>
 #include <string>
@@ -41,13 +42,23 @@ void Game::startGame(const string & func) {
 		throw(gameAlreadyStarted);
 	}
 	if (func.find("FiveCardDraw") == string::npos) {
-		throw(unknownGame);
+		if (func.find("SevenCardStud") == string::npos) {
+			throw(unknownGame);
+		}
+		try {
+			gptr = make_shared<SevenCardStud>();
+		}
+		catch (...) {
+			throw(allocException);
+		}
 	}
-	try {
-		gptr = make_shared<FiveCardDraw>();
-	}
-	catch (...) {
-		throw(allocException);
+	else {
+		try {
+			gptr = make_shared<FiveCardDraw>();
+		}
+		catch (...) {
+			throw(allocException);
+		}
 	}
 }
 

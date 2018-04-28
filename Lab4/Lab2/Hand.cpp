@@ -46,6 +46,20 @@ bool Hand::operator==(const Hand & h) const {
 	}
 }
 
+//return the private set of cards
+vector<Card> & Hand::getCards() {
+	return cards;
+}
+
+//sets the cards of the hand
+void Hand::setCards(vector<Card>::iterator it, int size) {
+	cards = vector<Card>();
+	auto finalIt = it + size;
+	while (it < finalIt) {
+		cards.push_back(*it);
+		++it;
+	}
+}
 //will return how many cards are currently inside the hand
 size_t Hand::sizeOfHand() {
 	return cards.size();
@@ -133,13 +147,26 @@ void dealFaceDown(Hand & h, Deck & d) {
 	if (d.deck.size() == 0) {
 		return;
 	}
-	Card c = d.deck.at(d.deck.size() - 1);
-	c.isFaceUp = false;
+	Card & c = d.deck.at(d.deck.size() - 1);
 	d.deck.pop_back();
 	h.cards.push_back(c);
-	sort(h.cards.begin(), h.cards.end());
+	h.cards[h.cards.size() - 1].isFaceUp = false;
 }
 
+//put in as a substituion to the operator<< of hand so that the hand does not sort
+void dealFaceUp(Hand & h, Deck & d) {
+	if (d.deck.size() == 0) {
+		return;
+	}
+	Card & c = d.deck.at(d.deck.size() - 1);
+	d.deck.pop_back();
+	h.cards.push_back(c);
+}
+
+//sorts cards to be used in sevenCardStud so that pokerRank can run correctly
+void Hand::sortCards() {
+	sort(cards.begin(), cards.end());
+}
 
 //overloads the << operator to unload the last card in the inputted deck into the designated hand, and then sorts that hand afterwards to ensure that the cards in the hand are in the correct order
 void operator<<(Hand & h, Deck & d) {

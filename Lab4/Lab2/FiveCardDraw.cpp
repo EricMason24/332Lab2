@@ -273,6 +273,8 @@ int FiveCardDraw::bettingPhase() {
 			Player & currP = *players[pos];
 			if (!currP.hasFolded && !currP.outOfChips) {
 				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." << endl;
+				cout << "\n" << "Curret round bet is: " << currBet << " chips." << endl;
+				cout << "\n" << currP.name << "'s current bet this round is: " << currP.currBet << " chips." << endl;
 				if (!hasBet) {
 					hasBet = check(pos);
 				}

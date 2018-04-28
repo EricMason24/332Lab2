@@ -21,7 +21,7 @@ string l = "losses";
 string c = "chips";
 
 //constructor for a Player given a file, it will open the file and parse wins and losses
-Player::Player(char * inputName) : name(inputName), chips(20),wins(0), losses(0), playerHand(),hasFolded(false),outOfChips(false), currBet(0) {
+Player::Player(char * inputName) : name(inputName), chips(20), wins(0), losses(0), playerHand(), bestHand(),hasFolded(false), outOfChips(false), currBet(0) {
 	ifstream ifs;
 	string fileName(inputName);
 	ifs.open(fileName + ".txt");
