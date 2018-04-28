@@ -362,7 +362,10 @@ void SevenCardStud::winsLosses() {
 	cout << "before sort" << endl;
 	for (size_t i = 0; i < temp.size(); ++i) {
 		(*temp[i]).playerHand.sortCards();
+		combinationPoker(*temp[i]);
+		cout << "Best Hand " << (*temp[i]).bestHand.getRealHand() << endl;
 	}
+	cout << "before stud poker" << endl;
 	sort(temp.begin(), temp.end(), studPoker_rank);
 	for (size_t i = 0; i < temp.size(); ++i) {
 		++(*temp[i]).losses;
@@ -389,7 +392,7 @@ void SevenCardStud::winsLosses() {
 			endl << "	Losses: " << (*temp[i]).losses <<
 			endl << "	Chips: " << (*temp[i]).chips << endl;
 		if (!(*temp[i]).hasFolded) {
-			cout << "	Hand: " << (*temp[i]).playerHand << endl;
+			cout << "	Best Hand: " << (*temp[i]).bestHand.getRealHand() << endl;
 		}
 		else {
 			cout << "\t" << (*temp[i]).name << " folded." << endl;
@@ -477,9 +480,16 @@ void combinationPoker(Player & p) {
 	Hand copyHand;
 	while (next_combination(cards.begin(), cards.begin() + handSize, cards.end())) {
 		if (bHand.sizeOfHand() == 0) {
-			
+			bHand.setCards(cards.begin(), handSize);
+		}
+		else {
+			copyHand.setCards(cards.begin(), handSize);
+			if (pokerRank(copyHand, bHand)) {
+				bHand = copyHand;
+			}
 		}
 	}
+	p.bestHand = bHand;
 }
 
 

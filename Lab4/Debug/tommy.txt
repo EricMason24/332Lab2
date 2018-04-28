@@ -1,4 +1,4 @@
 name tommy
 wins 2
-losses 1
-chips 20
+losses 3
+chips 13

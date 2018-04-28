@@ -1,4 +1,4 @@
 name eric
-wins 10
+wins 12
 losses 17
-chips 5
+chips 12

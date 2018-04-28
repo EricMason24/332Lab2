@@ -287,6 +287,12 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 		Card::Ranks highPair2 = Card::Ranks::noRank;
 		Card::Ranks lowPair1 = Card::Ranks::noRank;
 		Card::Ranks lowPair2 = Card::Ranks::noRank;
+		int pair1Pos1 = 0;
+		int pair1Pos2 = 0;
+		int pair2Pos1 = 0;
+		int pair2Pos2 = 0;
+		int pairPos1 = 0;
+		int pairPos2 = 0;
 		switch (h1Rank) {
 		case pokerHands::straightF:
 			highCard1 = h1.cards.at(h1.cards.size() - 1).rank;
@@ -375,11 +381,73 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 				highPair2 = h2Pair2.pairRank;
 				lowPair2 = h2Pair1.pairRank;
 			}
+		if (highPair1 == highPair2 && lowPair1 == lowPair2) {
+
+				for (size_t i = 0; i < h1.cards.size() -1 ; ++i) {
+					if (h1.cards[i].rank == highPair1 && h1.cards[i + 1].rank == highPair1) {
+						pair1Pos1 = i;
+					}
+					if (h1.cards[i].rank == lowPair1 && h1.cards[i+1].rank == lowPair1) {
+						pair1Pos2 = i;
+					}
+					if (h2.cards[i].rank == highPair2 && h1.cards[i+1].rank == highPair2) {
+						pair2Pos1 = i;
+					}
+					if (h2.cards[i].rank == lowPair2 && h1.cards[i+1].rank == lowPair2) {
+						pair2Pos2 = i;
+					}
+				}
+				int j = 4;
+				for (int i = 4; i >= 0; --i) {
+					while (pair1Pos1 == j || pair1Pos1 == (j - 1) || pair1Pos2 == j || pair1Pos2 == (j - 1)) {
+						--j;
+					}
+					while (pair2Pos1 == i || pair2Pos1 == (i - 1) || pair2Pos2 == i || pair2Pos2 == (i - 1)) {
+						--i;
+					}
+					if (h1.cards[j].rank > h2.cards[i].rank) {
+						return true;
+					}
+					if (h1.cards[j].rank < h2.cards[i].rank) {
+						return false;
+					}
+					--j;
+				}
+				return false;
+			} 
 			return (highPair1 > highPair2) || ((highPair1 == highPair2) && (lowPair1 > lowPair2));
 			break;
 		case pokerHands::Pair:
-			highPair1 = h1Pair1.pairRank;
+			highPair1 = h1Pair1.pairRank; 
 			highPair2 = h2Pair1.pairRank;
+
+		if (highPair1 == highPair2) {
+				for (size_t i = 0; i < h1.cards.size() - 1; ++i) {
+					if (h1.cards[i].rank == h1.cards[i+1].rank) {
+						pairPos1 = i;
+					}
+					if (h2.cards[i].rank == h2.cards[i+1].rank) {
+						pairPos2 = i;
+					}
+				}
+				int j = 4;
+				for (int i = 4; i >= 0; --i) {
+					while (pairPos1 == j || pairPos1 == (j - 1)) {
+						--j;
+					}
+					while (pairPos2 == i || pairPos2 == (i - 1)){
+						--i;
+					}
+					if (h1.cards[j].rank > h2.cards[i].rank) {
+						return true;
+					}
+					if (h1.cards[j].rank < h2.cards[i].rank) {
+						return false;
+					}
+					--j;
+				}
+				return false;
+			} 
 			return highPair1 > highPair2;
 			break;
 		case pokerHands::noRank:
