@@ -18,6 +18,7 @@
 #include <fstream>
 #include <sstream>
 
+// initialize dealer to first player, add 52 cards to main deck
 FiveCardDraw::FiveCardDraw() : cDealer(0) {
 	for (int s = Card::diamonds; s <= Card::clubs; ++s) {
 		for (int r = Card::two; r <= Card::ace; ++r) {
@@ -27,6 +28,7 @@ FiveCardDraw::FiveCardDraw() : cDealer(0) {
 	}
 }
 
+// allows players to swap cards
 int FiveCardDraw::before_turn(Player & p) {
 	string discardstr = "";
 	string cardPos = "";
@@ -127,11 +129,13 @@ int FiveCardDraw::after_turn(Player & p) {
 	cout << "	Hand: " << p.playerHand << endl;
 	return Success;
 }
+
+// allows players to check or bet
 bool FiveCardDraw::check(int playerPos) {
 	Player & currP = *players[playerPos];
 	bool hasBet = false;
 	//cout << "No players have bet yet" << endl;
-	cout << "Would you like to check? (y/n), a no will force you to bet 1 or 2 chips." << endl;
+	cout << "\nWould you like to check? (y/n), a no will force you to bet 1 or 2 chips." << endl;
 	string check;
 	bool validR = false;
 	while (!validR) {
@@ -178,10 +182,12 @@ bool FiveCardDraw::check(int playerPos) {
 	}
 	return hasBet;
 }
+
+// allows players to fold, call, or raise
 void FiveCardDraw::fcr(int playerPos) {
 	Player & currP = *players[playerPos];
 	//cout << "Current bet is " << currBet << endl;
-	cout << "Would " << currP.name << " like to fold, call or raise? (f/c/r)" << endl;
+	cout << "\nWould " << currP.name << " like to fold, call or raise? (f/c/r)" << endl;
 	string result;
 	bool resultV = false;
 	while (!resultV) {
@@ -253,6 +259,7 @@ void FiveCardDraw::fcr(int playerPos) {
 	}
 }
 
+// handles all betting; loops through players and calls check or fcr depending on who has bet so far
 int FiveCardDraw::bettingPhase() {
 	//have players bet before round begins
 	bool hasBet = false;
@@ -272,14 +279,13 @@ int FiveCardDraw::bettingPhase() {
 			size_t pos = (cDealer + 1 + j) % players.size();
 			Player & currP = *players[pos];
 			if (!currP.hasFolded && !currP.outOfChips) {
-				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." << endl;
-				cout << "\n" << "Curret round bet is: " << currBet << " chips." << endl;
-				cout << "\n" << currP.name << "'s current bet this round is: " << currP.currBet << " chips." << endl;
+				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." << 
+				endl << "The current round bet is " << currBet << " chips." <<
+				endl << currP.name << "'s current bet this round is " << currP.currBet << " chips." << endl;
 				if (!hasBet) {
 					hasBet = check(pos);
 				}
 				else {
-					//cout << "Player current bet: " << currP.currBet << endl;
 					if (currBet != currP.currBet) {
 						fcr(pos);
 					}
@@ -294,11 +300,6 @@ int FiveCardDraw::bettingPhase() {
 		if (hasBet) {
 			for (size_t j = 0; j < players.size(); ++j) {
 				Player & currP = *players[j];
-				/* cout << "name " << currP.name << endl;
-				cout << "folded " << currP.hasFolded << endl;
-				cout << "outofC " << currP.outOfChips << endl;
-				cout << "currbet " << currP.currBet << endl;
-				cout << "round bet " << currBet << endl; */
 				if (!currP.hasFolded && !currP.outOfChips && currBet != currP.currBet) {
 					allSet = false;
 				}
@@ -315,7 +316,7 @@ int FiveCardDraw::bettingPhase() {
 					holderPos = j;
 				}
 			}
-			if (nonFoldPlayers == 1) {
+			if (nonFoldPlayers == 1) { // everyone but 1 player has folded; they win
 				Player & p = *players[holderPos];
 				cout << "\n" << p.name << " is the last player left in game, so they have won the round." << endl;
 				p.chips += pot;
@@ -350,7 +351,8 @@ int FiveCardDraw::bettingPhase() {
 	}
 	return 0;
 }
-//shuffles the deck, prints out the current dealer, deals 5 cards to all players and calls before turn on all of the players to determine what they discard
+//shuffles the deck, prints out the current dealer, deals 5 cards to all players and calls before turn on all of the players 
+// to determine what they discard; ante
 int FiveCardDraw::before_round() {
 	pot = 0;
 	currBet = 0;
@@ -423,6 +425,7 @@ int FiveCardDraw::after_round() {
 	return 0;
 }
 
+// sorts hands, updates wins and losses accordingly, distributes chips, prints score
 void FiveCardDraw::winsLosses() {
 	int finalPosOfWinner = 0;
 	vector<shared_ptr<Player>> temp = players;
@@ -460,6 +463,7 @@ void FiveCardDraw::winsLosses() {
 	}
 }
 
+// check that everyone has at least 1 chip before the next round; if out, must either reset or leave
 void FiveCardDraw::checkChips() {
 	for (size_t i = 0; i < players.size(); ++i) {
 		Player & p = (*players[i]);
@@ -487,11 +491,11 @@ void FiveCardDraw::checkChips() {
 					cout << "Please enter y or n" << endl;
 				}
 			}
-
 		}
 	}
-
 }
+
+// poker_rank for players; calls pokerRank on their hands
 bool poker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 	if (p1 == nullptr) {
 		return false;
@@ -504,6 +508,7 @@ bool poker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 	}
 }
 
+// puts all of discard deck into a player's hand, then all player hands into mainD, thus recycling all cards
 void FiveCardDraw::recycleDeck() {
 	while (discard.sizeofDeck() > 0) { // add all cards in discard deck to first player's hand
 		(*players[0]).playerHand << discard;
@@ -518,6 +523,7 @@ void FiveCardDraw::recycleDeck() {
 	}
 }
 
+// asks if anyone would like to leave
 void FiveCardDraw::askLeave() {
 	string s = "";
 	cout << "\nWould any players like to leave the game at this point? y/n ?" << endl;
@@ -552,6 +558,7 @@ void FiveCardDraw::askLeave() {
 	}
 }
 
+// asks if anyone would like to join
 void FiveCardDraw::askJoin() {
 	string s = "";
 	cout << "\nWould any players like to join the game at this point? y/n ?" << endl;

@@ -25,7 +25,6 @@ Hand::Hand()
 Hand::Hand(const Hand & h)
 	: cards(h.cards) {}
 
-
 //assignment operator to assign a hand to be equal to another hand
 //can compare two cards (vector<Card>) because the == operator for a Card is overloaded in PlayingCard.cpp
 void Hand::operator=(const Hand & h) {
@@ -122,9 +121,7 @@ Card Hand::operator[](size_t loc) {
 	catch (out_of_range) {
 		throw(outOfBoundsException);
 	}
-
 }
-
 
 //remove_card will take a position in the vector and remove it from the current card vector
 void Hand::remove_card(size_t loc) {
@@ -139,10 +136,9 @@ void Hand::remove_card(size_t loc) {
 	catch (...) {
 		throw(outOfBoundsException);
 	}
-
-
 }
 
+// deals this hand a face down card from deck d
 void dealFaceDown(Hand & h, Deck & d) {
 	if (d.deck.size() == 0) {
 		return;
@@ -153,7 +149,7 @@ void dealFaceDown(Hand & h, Deck & d) {
 	h.cards[h.cards.size() - 1].isFaceUp = false;
 }
 
-//put in as a substituion to the operator<< of hand so that the hand does not sort
+//put in as a substitution to the operator<< of hand so that the hand does not sort
 void dealFaceUp(Hand & h, Deck & d) {
 	if (d.deck.size() == 0) {
 		return;
@@ -186,35 +182,26 @@ pokerHands getPRank(const Hand & h, Pair & p1, Pair & p2) {
 	bool flush = isFlush(h.cards);
 	bool straight = isStraight(h.cards);
 	//find any pairs in the hand and set the pair ranks of the hand to the appropriate values
-	bool alreadyCheckedP1 = false;
-	bool alreadyCheckedP2 = false;
 	for (size_t i = 0; i < h.cards.size() - 1; ++i) {
-		if (p1.pairRank != Card::Ranks::noRank) {
-			alreadyCheckedP1 = true;
-		}
-		if (p2.pairRank != Card::Ranks::noRank) {
-			alreadyCheckedP2 = true;
-		}
+		Card iCard = h.cards.at(i);
 		for (size_t j = i + 1; j < h.cards.size(); ++j) {
-			Card iCard = h.cards.at(i);
 			Card jCard = h.cards.at(j);
 			if (iCard.rank == jCard.rank) {
-				if (p1.pairRank == iCard.rank && !alreadyCheckedP1) {
+				++i;
+				if (p1.pairRank == iCard.rank) {
 					++p1.numDups;
 				}
-				else if (p2.pairRank == iCard.rank && !alreadyCheckedP2) {
+				else if (p2.pairRank == iCard.rank) {
 					++p2.numDups;
 				}
 				else if (p1.pairRank == Card::Ranks::noRank) {
 					p1.pairRank = iCard.rank;
 					++p1.numDups;
-
 				}
 				else if (p2.pairRank == Card::Ranks::noRank) {
 					p2.pairRank = iCard.rank;
 					++p2.numDups;
 				}
-
 			}
 		}
 	}
@@ -258,15 +245,12 @@ bool isFlush(const vector<Card> & cards) {
 
 //checks if a hand has a straight, getRankNum is located in PlayingCard.cpp and will return the numerical value of the given rank
 bool isStraight(const vector<Card> & cards) {
-	Card first = cards.at(0);
-	Card last = cards.at(cards.size() - 1);
-	int diff = getRankNum(last) - getRankNum(first);
-	if (diff == 4) {
-		return true;
+	for (size_t i = 1; i < cards.size(); ++i) {
+		if (!(cards[i].rank - cards[i - 1].rank == 1)) {
+			return false;
+		}
 	}
-	else {
-		return false;
-	}
+	return true;
 }
 
 //takes in two hands, computes thier ranks and then compares the rank of both hands, returning true only if hand 1 has a higher rank than hand 2
@@ -300,38 +284,64 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 			return highCard1 > highCard1;
 			break;
 		case pokerHands::fourOKind:
-			if (h1Pair1.numDups == 4) {
-				highPair1 = h1Pair1.pairRank;
+			if (h2.cards[0].rank == h2.cards[1].rank) { // hand 2 four cards are low
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 four cards are low
+					if (h2.cards[0].rank == h1.cards[0].rank) {
+						return h2.cards[4].rank < h1.cards[4].rank;
+					}
+					return h2.cards[0].rank < h1.cards[0].rank;
+				}
+				else { // hand 1 four cards are high
+					if (h2.cards[0].rank == h1.cards[4].rank) {
+						return h2.cards[4].rank < h1.cards[0].rank;
+					}
+					return h2.cards[0].rank < h1.cards[4].rank;
+				}
 			}
-			else {
-				highPair1 = h1Pair2.pairRank;
+			else { // hand 2 four cards are high
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 four cards are low
+					if (h2.cards[4].rank == h1.cards[0].rank) {
+						return h2.cards[0].rank < h1.cards[4].rank;
+					}
+					return h2.cards[4].rank < h1.cards[0].rank;
+				}
+				else { // hand 1 four cards are high
+					if (h2.cards[4].rank == h1.cards[4].rank) {
+						return h2.cards[0].rank < h1.cards[0].rank;
+					}
+					return h2.cards[4].rank < h1.cards[4].rank;
+				}
 			}
-			if (h2Pair1.numDups == 4) {
-				highPair2 = h2Pair1.pairRank;
-			}
-			else {
-				highPair2 = h2Pair2.pairRank;
-			}
-			return highPair1 > highPair2;
 			break;
 		case pokerHands::fullHouse:
-			if (h1Pair1.numDups == 3) {
-				highPair1 = h1Pair1.pairRank;
-				lowPair1 = h1Pair2.pairRank;
+			if (h2.cards[0].rank == h2.cards[1].rank) { // hand 2 three cards are low
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 three cards are low
+					if (h2.cards[2].rank == h1.cards[2].rank) { // same set of 3, compare set of 2
+						return h2.cards[4].rank < h1.cards[4].rank;
+					} // else compare set
+					return h2.cards[2].rank < h1.cards[2].rank;
+				}
+				else { // hand 1 three cards are high
+					if (h2.cards[2].rank == h1.cards[4].rank) { // same set of 3, h2 is higher
+						return false;
+					} // else compare set
+					return h2.cards[2].rank < h1.cards[4].rank;
+				}
 			}
-			else {
-				highPair1 = h1Pair2.pairRank;
-				lowPair1 = h1Pair1.pairRank;
+			else { // hand 2 three cards are high
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 three cards are low
+					if (h2.cards[4].rank == h1.cards[2].rank) { // same set of 3, h1 is higher
+						return true;
+					} // else compare set
+					return h2.cards[4].rank < h1.cards[2].rank;
+				}
+				else { // hand 1 three cards are high
+					if (h2.cards[4].rank == h1.cards[4].rank) { // same set of 3, compare set of 2
+						return h2.cards[1].rank < h1.cards[1].rank;
+					} // else compare set
+					return h2.cards[4].rank < h1.cards[4].rank;
+				}
 			}
-			if (h2Pair1.numDups == 3) {
-				highPair2 = h2Pair1.pairRank;
-				lowPair2 = h2Pair2.pairRank;
-			}
-			else {
-				highPair2 = h2Pair2.pairRank;
-				lowPair2 = h2Pair1.pairRank;
-			}
-			return (highPair1 > highPair2) || ((highPair1 == highPair2) && (lowPair1 > lowPair2));
 			break;
 		case pokerHands::flush:
 			for (int i = 4; i >= 0; --i) {
@@ -349,20 +359,82 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 			highCard2 = h1.cards.at(h2.cards.size() - 1).rank;
 			return highCard1 > highCard2;
 			break;
-		case pokerHands::threeOKind:
-			if (h1Pair1.numDups == 3) {
-				highPair1 = h1Pair1.pairRank;
+		case pokerHands::threeOKind: //	can't assume two hands don't share same set of 3.................
+			if (h2.cards[0].rank == h2.cards[1].rank) { // hand 2 three cards are low
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 three cards are low
+					if (h2.cards[2].rank == h1.cards[2].rank) { // same set of 3
+						if (h2.cards[4].rank == h1.cards[4].rank) { // top card same, compare 2nd top
+							return h2.cards[3].rank < h1.cards[3].rank;
+						} // else compare top
+						return h2.cards[4].rank < h1.cards[4].rank;
+					} // else compare set
+					return h2.cards[2].rank < h1.cards[2].rank;
+				}
+				else if (h1.cards[1].rank == h1.cards[2].rank) { // hand 1 three cards are middle
+					if (h2.cards[2].rank == h1.cards[3].rank) { // same set of 3
+						if (h2.cards[4].rank == h1.cards[4].rank) { // top card same, h2 is higher
+							return false;
+						} // else compare top
+						return h2.cards[4].rank < h1.cards[4].rank;
+					} // else compare set
+					return h2.cards[2].rank < h1.cards[3].rank;
+				}
+				else { // hand 1 three cards are high
+					if (h2.cards[2].rank == h1.cards[4].rank) { // same set of 3, h2 is higher
+						return false;
+					} // else compare set
+					return h2.cards[2].rank < h1.cards[4].rank;
+				}
 			}
-			else {
-				highPair1 = h1Pair2.pairRank;
+			else if (h2.cards[1].rank == h2.cards[2].rank) { // hand 2 three cards are middle
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 three cards are low
+					if (h2.cards[3].rank == h1.cards[2].rank) { // same set of 3
+						if (h2.cards[4].rank == h1.cards[4].rank) { // top card same, h1 is higher
+							return true;
+						} // else compare top
+						return h2.cards[4].rank < h1.cards[4].rank;
+					} // else compare set
+					return h2.cards[3].rank < h1.cards[2].rank;
+				}
+				else if (h1.cards[1].rank == h1.cards[2].rank) { // hand 1 three cards are middle
+					if (h2.cards[3].rank == h1.cards[3].rank) { // same set of 3
+						if (h2.cards[4].rank == h1.cards[4].rank) { // top card same, compare bottom
+							return h2.cards[0].rank < h1.cards[0].rank;
+						} // else compare top
+						return h2.cards[4].rank < h1.cards[4].rank;
+					} // else compare set
+					return h2.cards[3].rank < h1.cards[3].rank;
+				}
+				else { // hand 1 three cards are high
+					if (h2.cards[3].rank == h1.cards[4].rank) { // same set of 3, h2 is higher
+						return false;
+					} // else compare set
+					return h2.cards[3].rank < h1.cards[4].rank;
+				}
 			}
-			if (h2Pair1.numDups == 3) {
-				highPair2 = h2Pair1.pairRank;
+			else { // hand 2 three cards are high
+				if (h1.cards[0].rank == h1.cards[1].rank) { // hand 1 three cards are low
+					if (h2.cards[4].rank == h1.cards[2].rank) { // same set of 3, h1 is higher
+						return true;
+					} // else compare set
+					return h2.cards[4].rank < h1.cards[2].rank;
+				}
+				else if (h1.cards[1].rank == h1.cards[2].rank) { // hand 1 three cards are middle
+					if (h2.cards[4].rank == h1.cards[3].rank) { // same set of 3, h1 is higher
+						return true;
+					} // else compare set
+					return h2.cards[4].rank < h1.cards[3].rank;
+				}
+				else { // hand 1 three cards are high
+					if (h2.cards[4].rank == h1.cards[4].rank) { // same set of 3, compare top
+						if (h2.cards[1].rank == h1.cards[1].rank) { // top card same, compare bottom
+							return h2.cards[0].rank < h1.cards[0].rank;
+						} // else compare top
+						return h2.cards[1].rank < h1.cards[1].rank;
+ 					} // else compare set
+					return h2.cards[2].rank < h1.cards[4].rank;
+				}
 			}
-			else {
-				highPair2 = h2Pair2.pairRank;
-			}
-			return highPair1 > highPair2;
 			break;
 		case pokerHands::twoPair:
 			if (h1Pair1.pairRank > h1Pair2.pairRank) {
@@ -381,8 +453,7 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 				highPair2 = h2Pair2.pairRank;
 				lowPair2 = h2Pair1.pairRank;
 			}
-		if (highPair1 == highPair2 && lowPair1 == lowPair2) {
-
+			if (highPair1 == highPair2 && lowPair1 == lowPair2) {
 				for (size_t i = 0; i < h1.cards.size() -1 ; ++i) {
 					if (h1.cards[i].rank == highPair1 && h1.cards[i + 1].rank == highPair1) {
 						pair1Pos1 = i;
@@ -390,10 +461,10 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 					if (h1.cards[i].rank == lowPair1 && h1.cards[i+1].rank == lowPair1) {
 						pair1Pos2 = i;
 					}
-					if (h2.cards[i].rank == highPair2 && h1.cards[i+1].rank == highPair2) {
+					if (h2.cards[i].rank == highPair2 && h2.cards[i+1].rank == highPair2) {
 						pair2Pos1 = i;
 					}
-					if (h2.cards[i].rank == lowPair2 && h1.cards[i+1].rank == lowPair2) {
+					if (h2.cards[i].rank == lowPair2 && h2.cards[i+1].rank == lowPair2) {
 						pair2Pos2 = i;
 					}
 				}
@@ -404,6 +475,9 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 					}
 					while (pair2Pos1 == i || pair2Pos1 == (i - 1) || pair2Pos2 == i || pair2Pos2 == (i - 1)) {
 						--i;
+					}
+					if (j < 0 || i < 0) {
+						return false;
 					}
 					if (h1.cards[j].rank > h2.cards[i].rank) {
 						return true;
@@ -420,8 +494,7 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 		case pokerHands::Pair:
 			highPair1 = h1Pair1.pairRank; 
 			highPair2 = h2Pair1.pairRank;
-
-		if (highPair1 == highPair2) {
+			if (highPair1 == highPair2) {
 				for (size_t i = 0; i < h1.cards.size() - 1; ++i) {
 					if (h1.cards[i].rank == h1.cards[i+1].rank) {
 						pairPos1 = i;
@@ -437,6 +510,9 @@ bool pokerRank(const Hand & h1, const Hand & h2) {
 					}
 					while (pairPos2 == i || pairPos2 == (i - 1)){
 						--i;
+					}
+					if (j < 0 || i < 0) {
+						return false;
 					}
 					if (h1.cards[j].rank > h2.cards[i].rank) {
 						return true;

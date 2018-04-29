@@ -1,4 +1,4 @@
 name tommy
-wins 2
-losses 3
-chips 13
+wins 3
+losses 6
+chips 11

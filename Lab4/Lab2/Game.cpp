@@ -24,9 +24,7 @@ shared_ptr<Game> Game::gptr = nullptr;
 
 //destructor for game
 //do nothing because we are using shared pointers
-Game::~Game() {
-
-}
+Game::~Game() {}
 
 //returns a shared pointer pointing to the current game object
 shared_ptr<Game> Game::instance() {

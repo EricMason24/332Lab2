@@ -42,3 +42,4 @@ public:
 
 void combinationPoker(Player &);
 bool studPoker_rank(shared_ptr<Player>, shared_ptr<Player>);
+vector<Card> & findCombination(int, int, vector<Card> &, vector<Card> &, vector<Card> &);

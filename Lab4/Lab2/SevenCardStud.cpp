@@ -1,5 +1,5 @@
-// FiveCardDraw.cpp
-// Implements the game class for a specific game of Five Card Draw.
+// SevenCardStud.cpp
+// Implements the game class for a specific game of Seven Card Stud.
 // Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
@@ -18,6 +18,7 @@
 #include <fstream>
 #include <sstream>
 
+// initialize dealer to first position, add 52 cards to main deck
 SevenCardStud::SevenCardStud() : cDealer(0) {
 	for (int s = Card::diamonds; s <= Card::clubs; ++s) {
 		for (int r = Card::two; r <= Card::ace; ++r) {
@@ -32,7 +33,7 @@ int SevenCardStud::before_turn(Player & p) {
 	return Success;
 }
 
-//determines which turn it currently is in the round, and deals cards to the player in accordance to this turn. 
+//determines which turn it currently is in the round, and deals cards to the player in accordance to this turn
 int SevenCardStud::turn(Player & p) {
 	if (mainD.sizeofDeck() == 0) {
 		return emptyDeck;
@@ -45,7 +46,6 @@ int SevenCardStud::turn(Player & p) {
 				return emptyDeck;
 			}
 		}
-		cout << p.playerHand << endl;
 		dealFaceUp(p.playerHand, mainD);
 		break;
 	case 4:
@@ -58,18 +58,16 @@ int SevenCardStud::turn(Player & p) {
 	return Success;
 }
 
-//prints the players current name and hand, with all cards being face up
 int SevenCardStud::after_turn(Player & p) {
-	cout << "\n" << "Player's name: " << p.name << endl;
-	string realHand = p.playerHand.getRealHand();
-	cout << "	Hand: " << realHand << endl;
+	//not used in sevenCardStud
 	return Success;
 }
+
+// allows player to check
 bool SevenCardStud::check(int playerPos) {
 	Player & currP = *players[playerPos];
 	bool hasBet = false;
-	//cout << "No players have bet yet" << endl;
-	cout << "Would you like to check? (y/n), a no will force you to bet 1 or 2 chips." << endl;
+	cout << "\nWould you like to check? (y/n), a no will force you to bet 1 or 2 chips." << endl;
 	string check;
 	bool validR = false;
 	while (!validR) {
@@ -116,10 +114,11 @@ bool SevenCardStud::check(int playerPos) {
 	}
 	return hasBet;
 }
+
+// allows player to fold, call, or raise
 void SevenCardStud::fcr(int playerPos) {
 	Player & currP = *players[playerPos];
-	//cout << "Current bet is " << currBet << endl;
-	cout << "Would " << currP.name << " like to fold, call or raise? (f/c/r)" << endl;
+	cout << "\nWould " << currP.name << " like to fold, call or raise? (f/c/r)" << endl;
 	string result;
 	bool resultV = false;
 	while (!resultV) {
@@ -135,15 +134,11 @@ void SevenCardStud::fcr(int playerPos) {
 			}
 			if (result == "c") {
 				int newBet = currBet - currP.currBet;
-				cout << "newBet: " << newBet << endl;
-				cout << "cChips: " << currP.chips << endl;
 				int cChips = currP.chips;
 				if ((cChips - newBet) > 0) {
 					currP.currBet += newBet;
 					pot += newBet;
 					currP.chips -= newBet;
-					//cout << "current bet: " << currP.currBet << endl;
-					//cout << "pot = " << pot << endl;
 				}
 				else {
 					cout << currP.name << " does not have enough chips to make the bet, so they are all in." << endl;
@@ -152,7 +147,6 @@ void SevenCardStud::fcr(int playerPos) {
 					currP.outOfChips = true;
 					currP.chips = 0;
 				}
-
 			}
 			if (result == "r") {
 				cout << "How many chips would " << currP.name << " like to raise? (1/2)" << endl;
@@ -191,6 +185,7 @@ void SevenCardStud::fcr(int playerPos) {
 	}
 }
 
+// handles all betting
 int SevenCardStud::bettingPhase() {
 	//have players bet before round begins
 	bool hasBet = false;
@@ -202,7 +197,7 @@ int SevenCardStud::bettingPhase() {
 		}
 	}
 	if (numBettingPlayers == 1) {
-		cout << "Only one player can bet, so moving on" << endl;
+		cout << "Only one player can bet, so moving on." << endl;
 		return Success;
 	}
 	while (!allSet) {
@@ -210,15 +205,14 @@ int SevenCardStud::bettingPhase() {
 			size_t pos = (cDealer + 1 + j) % players.size();
 			Player & currP = *players[pos];
 			if (!currP.hasFolded && !currP.outOfChips) {
-				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." << endl;
-				cout << "\n" << "Curret round bet is: " << currBet << " chips." << endl;
-				cout << "\n" << currP.name << "'s current bet this round is: " << currP.currBet << " chips." << endl;
+				cout << "\n" << currP.name << " is currently betting with " << currP.chips << " chips." <<
+				endl << "The current round bet is " << currBet << " chips." <<
+				endl << currP.name << "'s current bet this round is " << currP.currBet << " chips." << endl;
 				printHands(currP);
 				if (!hasBet) {
 					hasBet = check(pos);
 				}
 				else {
-					//cout << "Player current bet: " << currP.currBet << endl;
 					if (currBet != currP.currBet) {
 						fcr(pos);
 					}
@@ -249,7 +243,7 @@ int SevenCardStud::bettingPhase() {
 					holderPos = j;
 				}
 			}
-			if (nonFoldPlayers == 1) {
+			if (nonFoldPlayers == 1) { // everyone has folded but 1 player; they win
 				Player & p = *players[holderPos];
 				cout << "\n" << p.name << " is the last player left in game, so they have won the round." << endl;
 				p.chips += pot;
@@ -280,23 +274,22 @@ int SevenCardStud::bettingPhase() {
 				throw roundOver;
 			}
 		}
-
 	}
 	return 0;
 }
 
-//prints out all hands, with your hand being faceup
+//prints out all hands, with only your hand faceup
 void SevenCardStud::printHands(Player & p) {
 	cout << "\n" << p.name << "'s Hand: " << p.playerHand.getRealHand() << endl;
-	cout << "\n" << "Other Player Hands: " << endl;
+	cout << "\n\tOther player hands: " << endl;
 	for (size_t i = 0; i < players.size(); ++i) {
 		if ((*players[i]).name != p.name) {
-			cout << "\n" << "Player's name: " << (*players[i]).name <<
-				endl << "	Hand: " << (*players[i]).playerHand << endl;
+			cout << "\t" << (*players[i]).name << "'s hand: " << (*players[i]).playerHand << endl;
 		}
 	}
 }
-//shuffles the deck, prints out the current dealer, deals 5 cards to all players and calls before turn on all of the players to determine what they discard
+
+//shuffles the deck, prints out the current dealer, resets pertinent values, ante
 int SevenCardStud::before_round() {
 	pot = 0;
 	currBet = 0;
@@ -316,7 +309,7 @@ int SevenCardStud::before_round() {
 	return 0;
 }
 
-//calls turn on all players, refilling their hand with the right amount of cards depending on what they discarded, and then prints out all current hands through after turn
+//calls turn on all players for each phase of the round; starts betting phase after each phase
 int SevenCardStud::round() {
 	turnNum = 0;
 	for (int i = 0; i < 5; ++i) {
@@ -328,12 +321,10 @@ int SevenCardStud::round() {
 				if (res != 0) {
 					return res;
 				}
-				after_turn(*players[pos]);
 			}
 		}
 		for (size_t i = 0; i < players.size(); ++i) {
-			Player & currP = *players[i];
-			currP.currBet = 0;
+			(*players[i]).currBet = 0;
 		}
 		currBet = 0;
 		bettingPhase();
@@ -342,9 +333,8 @@ int SevenCardStud::round() {
 	return 0;
 }
 
-//gives the wins and losses of each player,shuffles the deck and prompts if anyone wants to leave or join the game, and assigning the next dealer as appropiate
+//gives the wins and losses of each player, shuffles the deck and prompts if anyone wants to leave or join the game, and assigns the next dealer as appropiate
 int SevenCardStud::after_round() {
-	cout << "after round" << endl;
 	winsLosses();
 	recycleDeck();
 	checkChips();
@@ -356,16 +346,14 @@ int SevenCardStud::after_round() {
 	return 0;
 }
 
+// finds best 5 cards of 7 card hand; sorts players best hands and gives chips accordingly; updates wins and losses
 void SevenCardStud::winsLosses() {
 	int finalPosOfWinner = 0;
 	vector<shared_ptr<Player>> temp = players;
-	cout << "before sort" << endl;
 	for (size_t i = 0; i < temp.size(); ++i) {
 		(*temp[i]).playerHand.sortCards();
 		combinationPoker(*temp[i]);
-		cout << "Best Hand " << (*temp[i]).bestHand.getRealHand() << endl;
 	}
-	cout << "before stud poker" << endl;
 	sort(temp.begin(), temp.end(), studPoker_rank);
 	for (size_t i = 0; i < temp.size(); ++i) {
 		++(*temp[i]).losses;
@@ -392,7 +380,7 @@ void SevenCardStud::winsLosses() {
 			endl << "	Losses: " << (*temp[i]).losses <<
 			endl << "	Chips: " << (*temp[i]).chips << endl;
 		if (!(*temp[i]).hasFolded) {
-			cout << "	Best Hand: " << (*temp[i]).bestHand.getRealHand() << endl;
+			cout << "	Best hand: " << (*temp[i]).bestHand.getRealHand() << endl;
 		}
 		else {
 			cout << "\t" << (*temp[i]).name << " folded." << endl;
@@ -400,6 +388,7 @@ void SevenCardStud::winsLosses() {
 	}
 }
 
+// checks if anyone is out of chips
 void SevenCardStud::checkChips() {
 	for (size_t i = 0; i < players.size(); ++i) {
 		Player & p = (*players[i]);
@@ -433,66 +422,43 @@ void SevenCardStud::checkChips() {
 
 }
 
-//taken from https://stackoverflow.com/questions/127704/algorithm-to-return-all-combinations-of-k-elements-from-n referenced from this piazza post: https://piazza.com/class/jcc6zondgla5pt?cid=479
-template <typename Iterator>
-bool next_combination(const Iterator first, Iterator k, const Iterator last)
-{
-	/* Credits: Mark Nelson http://marknelson.us */
-	if ((first == last) || (first == k) || (last == k))
-		return false;
-	Iterator i1 = first;
-	Iterator i2 = last;
-	++i1;
-	if (last == i1)
-		return false;
-	i1 = last;
-	--i1;
-	i1 = k;
-	--i2;
-	while (first != i1)
-	{
-		if (*--i1 < *i2)
-		{
-			Iterator j = k;
-			while (!(*i1 < *j)) ++j;
-			std::iter_swap(i1, j);
-			++i1;
-			++j;
-			i2 = k;
-			std::rotate(i1, j, last);
-			while (last != j)
-			{
-				++j;
-				++i2;
-			}
-			std::rotate(k, i2, last);
-			return true;
+// based on https://stackoverflow.com/questions/12991758/creating-all-possible-k-combinations-of-n-items-in-c
+// cycles through all combinations of 5 card hands in 7 card hand
+vector<Card> & findCombination(int offset, int k, vector<Card> & v, vector<Card> & comb, vector<Card> & best) {
+	if (k == 0) {
+		Hand copyHand, bestHand;
+		if (best.size() == 0) {
+			best = comb;
 		}
+		copyHand.setCards(comb.begin(), comb.size());
+		bestHand.setCards(best.begin(), best.size());
+		copyHand.sortCards();
+		bestHand.sortCards();
+		if (pokerRank(copyHand, bestHand)) {
+			best = comb;
+		}
+		return best;
 	}
-	std::rotate(first, k, last);
-	return false;
+	for (size_t i = offset; i <= v.size() - k; ++i) {
+		comb.push_back(v[i]);
+		best = findCombination(i + 1, k - 1, v, comb, best);
+		comb.pop_back();
+	}
+	return best;
 }
 
+// calls the recursive findCombination and updates player's best hand variable
 void combinationPoker(Player & p) {
 	int handSize = 5;
 	vector<Card> & cards = p.playerHand.getCards();
+	vector<Card> comb, best;
+	best = findCombination(0, handSize, cards, comb, best);
 	Hand bHand;
-	Hand copyHand;
-	while (next_combination(cards.begin(), cards.begin() + handSize, cards.end())) {
-		if (bHand.sizeOfHand() == 0) {
-			bHand.setCards(cards.begin(), handSize);
-		}
-		else {
-			copyHand.setCards(cards.begin(), handSize);
-			if (pokerRank(copyHand, bHand)) {
-				bHand = copyHand;
-			}
-		}
-	}
+	bHand.setCards(best.begin(), best.size());
 	p.bestHand = bHand;
 }
 
-
+// specialized for sevenCardStud: only compares the best hands of the players
 bool studPoker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 	if (p1 == nullptr) {
 		return false;
@@ -505,6 +471,7 @@ bool studPoker_rank(shared_ptr<Player> p1, shared_ptr<Player> p2) {
 	}
 }
 
+// moves all cards back to main deck
 void SevenCardStud::recycleDeck() {
 	for (size_t i = 0; i < players.size(); ++i) { // loop through players
 		for (size_t j = 0; j < (*players[i]).playerHand.sizeOfHand(); ++j) { // add player's hand to main deck
@@ -516,6 +483,7 @@ void SevenCardStud::recycleDeck() {
 	}
 }
 
+// asks if any players would like to leave
 void SevenCardStud::askLeave() {
 	string s = "";
 	cout << "\nWould any players like to leave the game at this point? y/n ?" << endl;
@@ -550,6 +518,7 @@ void SevenCardStud::askLeave() {
 	}
 }
 
+// asks if any players would like to join
 void SevenCardStud::askJoin() {
 	string s = "";
 	cout << "\nWould any players like to join the game at this point? y/n ?" << endl;

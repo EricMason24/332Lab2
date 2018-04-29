@@ -16,6 +16,7 @@ using namespace std;
 Card::Card()
 	:rank(Card::Ranks::noRank), suit(Card::Suits::noSuit), isFaceUp(true) {};
 
+// construct card with given rank and suit
 Card::Card(Card::Suits s, Card::Ranks r)
 	: suit(s), rank(r), isFaceUp(true) {};
 
@@ -74,7 +75,6 @@ Card::Ranks getRank(char rank) {
 	case 'k': return Card::Ranks::king; break;
 	case 'a': return Card::Ranks::ace; break;
 	default: return Card::Ranks::noRank; break;
-
 	}
 }
 
@@ -91,10 +91,8 @@ Card::Ranks getRankLength3(string rank) {
 //function that takes in a vector<Card> and a string that represents a file to be opened
 //the function then parses that file, looking for any valid cards and if there are, adds them to the vector
 int parseCard(vector<Card> & v, char * file) {
-	
 	ifstream ifs;
 	ifs.open(file);
-
 	if (!ifs.is_open()) {
 		cout << "CardLab1" << " cannot open source file " << file << " to read from" << endl;
 		return cannotOpenTextFile;
@@ -161,7 +159,6 @@ int parseCard(vector<Card> & v, char * file) {
 				cout << "Invalid number of cards warning" << endl;
 			}
 		}
-
 		return Success;
 	}
 }
@@ -196,7 +193,6 @@ string getCard(Card c) {
 	}
 	return output;
 }
-
 
 //takes in a constant vector and prints the cards in that vector onto the output stream
 int printVector(const vector<Card> & v) {
@@ -349,14 +345,12 @@ int poker(const vector<Card> & v) {
 						}
 					}
 				}
-			}
-
-		
+			}		
 		}
-		string pokerHand = evaluateHand(isflush, isStraight, pair, pair2);
+	string pokerHand = evaluateHand(isflush, isStraight, pair, pair2);
 
-		cout << pokerHand << endl;
-		}
-		return Success;
+	cout << pokerHand << endl;
 	}
+	return Success;
+}
 

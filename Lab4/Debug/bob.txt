@@ -1,4 +1,4 @@
 name bob
-wins 4
+wins 5
 losses 2
-chips 25
+chips 27

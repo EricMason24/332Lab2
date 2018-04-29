@@ -1,5 +1,5 @@
 // Lab2.cpp
-// The main function for Lab 3, will take in 4 arguments including the program name and create a Five Card Draw game from them.
+// The main function for Lab 4, will take in 4 arguments including the program name and create a game from them.
 // Authors: Eric Mason (m.mason@wustl.edu) and Tommy Blackwell (tommy.blackwell@wustl.edu)
 
 #include "stdafx.h"
@@ -8,6 +8,7 @@
 #include "PlayingCard.h"
 #include "Game.h"
 #include "FiveCardDraw.h"
+#include "SevenCardStud.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,10 +16,9 @@
 #include <sstream>
 using namespace std;
 
-
 string programName = "";
 
-
+// re-run main method with vector instead of argv[]
 int runGame(vector<string> prompt) {
 	size_t min_args = 3;
 	if (prompt.size() < min_args) {
@@ -35,7 +35,7 @@ int runGame(vector<string> prompt) {
 		catch (errors e) {
 			switch (e) {
 			case gameAlreadyStarted:
-				cout << "Game Already started error" << endl;
+				cout << "Game already started error" << endl;
 				return gameAlreadyStarted;
 				break;
 			case unknownGame:
@@ -43,11 +43,11 @@ int runGame(vector<string> prompt) {
 				return unknownGame;
 				break;
 			case allocException:
-				cout << "Allowlocation eception" << endl;
+				cout << "Allocation eception" << endl;
 				return allocException;
 				break;
 			default:
-				cout << "unknown error" << endl;
+				cout << "Unknown error" << endl;
 				return e;
 				break;
 			}
@@ -92,7 +92,7 @@ int runGame(vector<string> prompt) {
 					isRoundOver = true;
 				}
 				else {
-					cout << "Too many players to deal everyone 5 cards.\n" << endl;
+					cout << "Too many players in game.\n" << endl;
 					break;
 				}
 
@@ -126,7 +126,7 @@ int promptForGame() {
 }
 
 //main function
-//will take in at least 4 arguments, Program name, game name, and player names (at least 2)
+//will take in at least 4 arguments: program name, game name, and at least 2 player names
 int main(int argc, char * argv[])
 {
 	int min_args = 4;
@@ -145,7 +145,7 @@ int main(int argc, char * argv[])
 		catch (errors e) {
 			switch (e) {
 			case gameAlreadyStarted:
-				cout << "Game Already started error" << endl;
+				cout << "Game already started error" << endl;
 				return gameAlreadyStarted;
 				break;
 			case unknownGame:
@@ -153,11 +153,11 @@ int main(int argc, char * argv[])
 				return unknownGame;
 				break;
 			case allocException:
-				cout << "Allowlocation eception" << endl;
+				cout << "Allocation exception" << endl;
 				return allocException;
 				break;
 			default:
-				cout << "unknown error" << endl;
+				cout << "Unknown error" << endl;
 				return e;
 				break;
 			}
@@ -202,7 +202,7 @@ int main(int argc, char * argv[])
 					isRoundOver = true;
 				}
 				else {
-					cout << "Too many players to deal everyone 5 cards.\n" << endl;
+					cout << "Too many players in game.\n" << endl;
 					break;
 				}
 
@@ -218,9 +218,7 @@ int main(int argc, char * argv[])
 
 		}
 		// reach here, game over
-		cout << "hitting stopGame" << endl;
 		Game::stopGame();
-		cout << "after stopGAme" << endl;
 		bool validR = false;
 		string result;
 		while (!validR) {
